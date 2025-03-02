@@ -11,7 +11,7 @@ const MainLayout = () => {
       <div className="hidden md:flex md:w-1/7 fixed h-screen bg-white shadow-lg">
         <Navbar />
       </div>
-      <div className="flex-1 md:ml-[15%] lg:ml-[10%] xl:ml-[10%] bg-gray-200 min-h-screen ">
+      <div className="flex-1 md:ml-[15%] lg:ml-[10%] xl:ml-[10%] bg-gray-200 min-h-screen pb-9">
         <Outlet />
       </div>
       {/* Bottom Bar */}
