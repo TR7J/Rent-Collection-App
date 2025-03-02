@@ -138,6 +138,7 @@ const EditRental = () => {
         ...formData,
         utilities,
       });
+      console.log(response);
       showToast("Rental updated successfully!", "success");
       navigate("/rentals");
     } catch (error) {

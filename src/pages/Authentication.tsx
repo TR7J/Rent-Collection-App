@@ -9,8 +9,7 @@ const Authentication = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  const { state, dispatch } = useContext(Store);
-  const { userInfo } = state;
+  const { dispatch } = useContext(Store);
 
   const handleSignIn = async (e: React.SyntheticEvent) => {
     e.preventDefault();

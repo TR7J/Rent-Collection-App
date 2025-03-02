@@ -19,7 +19,7 @@ const AuthenticationDev = () => {
         password,
         role,
       });
-
+      console.log(data);
       showToast("User created successfully!", "success");
     } catch (error: any) {
       showToast("Error registering user", "error");

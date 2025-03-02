@@ -50,7 +50,7 @@ const Rentals = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isReminderModalOpen, setReminderModalOpen] = useState(false);
-  const { state, dispatch } = useContext(Store);
+  const { state } = useContext(Store);
   const { userInfo } = state;
   const navigate = useNavigate();
   const {
@@ -72,6 +72,7 @@ const Rentals = () => {
 
   // Function to handle reminder selection
   const handleReminder = (type: string) => {
+    console.log(type);
     closeReminderModal();
   };
 

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Store, UserInfo } from "../context/UserContext";
+import { Store } from "../context/UserContext";
 import { showToast } from "../utils/toastUtils";
 
 const Navbar = () => {

@@ -4,30 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { showToast } from "../utils/toastUtils";
 import { useDashboard } from "../context/DashboardContext";
 
-interface Property {
-  _id: string;
-  name: string;
-}
-
-interface Rental {
-  _id: string;
-  property: {
-    _id: string;
-    name: string;
-  };
-  renter: {
-    _id: string;
-    firstName: string;
-    lastName: string;
-  };
-}
-
-interface Tenant {
-  _id: string;
-  firstName: string;
-  lastName: string;
-}
-
 const predefinedUtilityTypes = [
   "Garbage",
   "Electricity",

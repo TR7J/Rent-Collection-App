@@ -43,7 +43,7 @@ const Tenants = () => {
   const [renters, setRenters] = useState<Renter[]>([]);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { state, dispatch } = useContext(Store);
+  const { state } = useContext(Store);
   const { userInfo } = state;
 
   useEffect(() => {

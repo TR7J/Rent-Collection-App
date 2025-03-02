@@ -2,8 +2,6 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useDashboard } from "../context/DashboardContext"; // Import the context
 import { Store } from "../context/UserContext";
 import { format } from "date-fns";
-import axios from "../axiosConfig";
-import { showToast } from "../utils/toastUtils";
 
 import {
   Card,
@@ -15,14 +13,11 @@ import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "../components/ui/table";
-import Payments from "./Payments";
-import Utilities from "./Utilities";
 
 const Dashboard = () => {
   type Active = "Month" | "Year";
