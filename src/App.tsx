@@ -31,12 +31,11 @@ function App() {
     <>
       <ToastContainer position="bottom-center" limit={5} />
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Authentication />} />
         <Route path="/authenticationdev" element={<AuthenticationDev />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<MainLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/" element={<MainLayout />}>
+            <Route path="/" element={<Dashboard />} />
             <Route path="/tenants" element={<Tenants />} />
             <Route path="/addtenant" element={<AddTenant />} />
             <Route path="/edittenant/:renterId" element={<EditTenant />} />
