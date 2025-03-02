@@ -1,5 +1,5 @@
 import Authentication from "./pages/Authentication";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Tenants from "./pages/Tenants";
 import Properties from "./pages/Properties";
 import Expenses from "./pages/Expenses";
