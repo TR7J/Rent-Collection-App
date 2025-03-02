@@ -206,7 +206,7 @@ const Properties = () => {
               {property.image ? (
                 <div className="w-1/3">
                   <img
-                    src={`http://localhost:8000${property.image}`}
+                    src={`https://rent-collection-app-api.onrender.com${property.image}`}
                     alt="Image"
                     className="size-44"
                   />

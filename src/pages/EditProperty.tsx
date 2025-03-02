@@ -234,7 +234,7 @@ const EditProperty = () => {
                 <img
                   src={
                     typeof formData.image === "string"
-                      ? `http://localhost:8000${formData.image}`
+                      ? `https://rent-collection-app-api.onrender.com${formData.image}`
                       : URL.createObjectURL(formData.image)
                   }
                   alt="Property"

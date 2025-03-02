@@ -225,7 +225,7 @@ const EditTenant: React.FC = () => {
             {formData.profilePhoto ? (
               <div className="flex flex-col items-center">
                 <img
-                  src={`http://localhost:8000${formData.profilePhoto}`}
+                  src={`https://rent-collection-app-api.onrender.com${formData.profilePhoto}`}
                   alt="Profile"
                   className="w-24 h-24 rounded-full object-cover mb-2"
                 />

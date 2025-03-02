@@ -281,7 +281,7 @@ const Tenants = () => {
                 {renter.profilePhoto ? (
                   <div className="py-4">
                     <img
-                      src={`http://localhost:8000${renter.profilePhoto}`}
+                      src={`https://rent-collection-app-api.onrender.com${renter.profilePhoto}`}
                       alt="Profile"
                       className="size-36 rounded-full object-cover"
                     />

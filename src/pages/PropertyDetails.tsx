@@ -95,7 +95,7 @@ const PropertyDetails = () => {
           {property.image && (
             <div className="md:col-span-2 flex justify-center">
               <img
-                src={`http://localhost:8000${property.image}`}
+                src={`https://rent-collection-app-api.onrender.com${property.image}`}
                 alt="Property"
                 className="max-w-full h-auto shadow-md size-56"
               />
