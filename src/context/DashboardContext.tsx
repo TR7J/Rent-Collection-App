@@ -133,7 +133,6 @@ export const DashboardProvider = ({ children }: { children: ReactNode }) => {
       const response = await axios.get("/api/admin/rentals");
       setRentals(response.data);
     } catch (error) {
-      showToast("Error fetching rentals", "error");
       console.error("Error fetching rentals:", error);
     }
   };
