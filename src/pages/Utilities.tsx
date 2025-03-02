@@ -141,92 +141,96 @@ const Utilities = () => {
       ) : utilities.length === 0 ? (
         <p className="text-center">No Utilities Found</p>
       ) : (
-        <table className="min-w-full overflow-x-auto bg-white">
-          <thead className="bg-gray-100 text-gray-600 text-xs font-semibold">
-            <tr>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "150px" }}
-              >
-                Renter
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "150px" }}
-              >
-                Property
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "100px" }}
-              >
-                Type
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "100px" }}
-              >
-                Date
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "100px" }}
-              >
-                Amount
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "200px" }}
-              >
-                Description
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "100px" }}
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-600 text-sm">
-            {utilities.map((utility) => (
-              <tr key={utility._id} className="border-b border-gray-200">
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {utility.renter.firstName} {utility.renter.lastName}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {utility.property.name}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">{utility.type}</td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {format(new Date(utility.date), "dd-MM-yyyy")}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  KES {utility.amount}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {utility.description}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  <div className="flex items-center space-x-4">
-                    <button className="text-violet-500 hover:text-violet-700">
-                      <Edit
-                        size={18}
-                        onClick={() => navigate(`editutility/${utility._id}`)}
-                      />
-                    </button>
-                    <button className="text-red-500 hover:text-red-700">
-                      <Trash2
-                        size={18}
-                        onClick={() => handleDeleteUtility(utility._id)}
-                      />
-                    </button>
-                  </div>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full whitespace-nowrap bg-white">
+            <thead className="bg-gray-100 text-gray-600 text-xs font-semibold">
+              <tr>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "150px" }}
+                >
+                  Renter
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "150px" }}
+                >
+                  Property
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "100px" }}
+                >
+                  Type
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "100px" }}
+                >
+                  Date
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "100px" }}
+                >
+                  Amount
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "200px" }}
+                >
+                  Description
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "100px" }}
+                >
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-gray-600 text-sm">
+              {utilities.map((utility) => (
+                <tr key={utility._id} className="border-b border-gray-200">
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {utility.renter.firstName} {utility.renter.lastName}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {utility.property.name}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {utility.type}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {format(new Date(utility.date), "dd-MM-yyyy")}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    KES {utility.amount}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {utility.description}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    <div className="flex items-center space-x-4">
+                      <button className="text-violet-500 hover:text-violet-700">
+                        <Edit
+                          size={18}
+                          onClick={() => navigate(`editutility/${utility._id}`)}
+                        />
+                      </button>
+                      <button className="text-red-500 hover:text-red-700">
+                        <Trash2
+                          size={18}
+                          onClick={() => handleDeleteUtility(utility._id)}
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

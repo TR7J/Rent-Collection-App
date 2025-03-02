@@ -140,102 +140,106 @@ const Payments = () => {
       ) : payments.length === 0 ? (
         <p className="text-center">No Payments Found</p>
       ) : (
-        <table className="min-w-full overflow-x-auto  bg-white">
-          <thead className="bg-gray-100 text-gray-600 text-xs font-semibold">
-            <tr>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "150px" }}
-              >
-                Renter
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "150px" }}
-              >
-                Property
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "100px" }}
-              >
-                Amount
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "100px" }}
-              >
-                Date
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "100px" }}
-              >
-                Late Fee
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "200px" }}
-              >
-                Description
-              </th>
-              <th
-                className="py-3 px-4 text-left whitespace-nowrap"
-                style={{ width: "100px" }}
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-600 text-sm">
-            {payments.map((payment) => (
-              <tr key={payment._id} className="border-b border-gray-200">
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {payment.renter.firstName} {payment.renter.lastName}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {payment.property.name}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  KES {payment.amount}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {format(new Date(payment.date), "dd-MM-yyyy")}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      payment.isLateFee
-                        ? "bg-red-100 text-red-800"
-                        : "bg-green-100 text-green-800"
-                    }`}
-                  >
-                    {payment.isLateFee ? "Yes" : "No"}
-                  </span>
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  {payment.description}
-                </td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  <div className="flex items-center space-x-4">
-                    <button className="text-violet-500 hover:text-violet-700">
-                      <Edit
-                        size={18}
-                        onClick={() => navigate(`/editpayment/${payment._id}`)}
-                      />
-                    </button>
-                    <button
-                      className="text-red-500 hover:text-red-700"
-                      onClick={() => handleDeletePayment(payment._id)}
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full whitespace-nowrap bg-white">
+            <thead className="bg-gray-100 text-gray-600 text-xs font-semibold">
+              <tr>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "150px" }}
+                >
+                  Renter
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "150px" }}
+                >
+                  Property
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "100px" }}
+                >
+                  Amount
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "100px" }}
+                >
+                  Date
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "100px" }}
+                >
+                  Late Fee
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "200px" }}
+                >
+                  Description
+                </th>
+                <th
+                  className="py-3 px-4 text-left whitespace-nowrap"
+                  style={{ width: "100px" }}
+                >
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-gray-600 text-sm">
+              {payments.map((payment) => (
+                <tr key={payment._id} className="border-b border-gray-200">
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {payment.renter.firstName} {payment.renter.lastName}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {payment.property.name}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    KES {payment.amount}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {format(new Date(payment.date), "dd-MM-yyyy")}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        payment.isLateFee
+                          ? "bg-red-100 text-red-800"
+                          : "bg-green-100 text-green-800"
+                      }`}
+                    >
+                      {payment.isLateFee ? "Yes" : "No"}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    {payment.description}
+                  </td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    <div className="flex items-center space-x-4">
+                      <button className="text-violet-500 hover:text-violet-700">
+                        <Edit
+                          size={18}
+                          onClick={() =>
+                            navigate(`/editpayment/${payment._id}`)
+                          }
+                        />
+                      </button>
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDeletePayment(payment._id)}
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
