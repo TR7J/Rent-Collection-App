@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { showToast } from "../utils/toastUtils";
+import { useDashboard } from "../context/DashboardContext";
+import { calculateBalance } from "../utils/calculateBalance";
 
 interface IExpense {
   _id: string;
@@ -31,13 +33,23 @@ interface IExpense {
 
 export default function ExpenseList() {
   const [expenses, setExpenses] = useState<IExpense[]>([]);
-  const [totalBalance, setTotalBalance] = useState(0);
+
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [earnings, setEarnings] = useState<number>(0); // New state for earnings
   const [expandedExpense, setExpandedExpense] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  // Use the Dashboard Context
+  const { utilities, deposits } = useDashboard();
+
+  const balance: number = calculateBalance(
+    earnings,
+    deposits,
+    totalExpenses,
+    utilities
+  );
 
   useEffect(() => {
     // Fetch expenses and earnings
@@ -63,9 +75,6 @@ export default function ExpenseList() {
 
         // Calculate total balance
         console.log(earnings);
-        const newTotalBalance = totalEarnings - totalExpenses;
-        console.log("Calculated Balance:", newTotalBalance);
-        setTotalBalance(newTotalBalance);
       } catch (error) {
         setError("Error fetching data.");
         console.error("Error fetching data:", error);
@@ -81,8 +90,7 @@ export default function ExpenseList() {
     setExpandedExpense(expandedExpense === id ? null : id);
   };
 
-  const progressPercentage =
-    (totalBalance / (totalBalance + totalExpenses)) * 100;
+  const progressPercentage = (balance / (balance + totalExpenses)) * 100;
 
   // Group expenses by date
   const parseDate = (date: string) => {
@@ -133,8 +141,7 @@ export default function ExpenseList() {
         setTotalExpenses(newTotalExpenses);
 
         // Recalculate total balance
-        const newTotalBalance = earnings - newTotalExpenses;
-        setTotalBalance(newTotalBalance);
+        calculateBalance(earnings, deposits, totalExpenses, utilities);
       } else {
         showToast("Failed to delete expense", "error");
       }
@@ -210,7 +217,10 @@ export default function ExpenseList() {
           <div className="px-4 sm:px-6 pt-6 pb-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold">Balance</h2>
-              <button className="text-purple-600 text-sm font-medium">
+              <button
+                className="text-purple-600 text-sm font-medium"
+                onClick={() => navigate("/")}
+              >
                 SEE MORE
               </button>
             </div>
@@ -232,7 +242,7 @@ export default function ExpenseList() {
                 <div>
                   <div className="text-sm text-gray-500">BALANCE</div>
                   <div className="text-lg font-semibold">
-                    {totalBalance.toLocaleString("en-US", {
+                    {balance.toLocaleString("en-US", {
                       style: "currency",
                       currency: "KES",
                       minimumFractionDigits: 0,

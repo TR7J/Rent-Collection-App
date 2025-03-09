@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://rent-collection-app-api.onrender.com", // "http://localhost:8000"
+  baseURL: "http://localhost:8000", //  "https://rent-collection-app-api.onrender.com"
 });
 // Add a request interceptor
 instance.interceptors.request.use(

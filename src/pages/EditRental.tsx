@@ -23,6 +23,7 @@ interface Utility {
 }
 
 const EditRental = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const { rentalId } = useParams();
   const navigate = useNavigate();
   const [properties, setProperties] = useState<Property[]>([]);
@@ -132,7 +133,7 @@ const EditRental = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const response = await axios.put(`/api/admin/updaterentals/${rentalId}`, {
         ...formData,
@@ -360,8 +361,9 @@ const EditRental = () => {
             <button
               type="submit"
               className="bg-violet-500 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-violet-600 w-full"
+              disabled={loading}
             >
-              Update Rental
+              {loading ? "Updating..." : "Update Rental"}
             </button>
           </div>
         </form>

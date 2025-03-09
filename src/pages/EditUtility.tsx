@@ -15,7 +15,6 @@ const predefinedUtilityTypes = [
 const EditUtility = () => {
   const { utilityId } = useParams<{ utilityId: string }>();
   const navigate = useNavigate();
-
   const [selectedProperty, setSelectedProperty] = useState<string>("");
   const [selectedRenterFirstName, setSelectedRenterFirstName] =
     useState<string>("");
@@ -40,14 +39,22 @@ const EditUtility = () => {
       try {
         setLoading(true);
         const response = await axios.get(`/api/admin/utility/${utilityId}`);
+        console.log("API Response:", response.data);
+
         const utility = response.data;
         setSelectedProperty(utility.property.name);
         setSelectedRenterFirstName(utility.renter.firstName);
         setSelectedRenterLastName(utility.renter.lastName);
+        console.log(utility.type);
         setType(utility.type);
         setDate(utility.date.split("T")[0]);
         setAmount(utility.amount);
         setDescription(utility.description);
+
+        if (!predefinedUtilityTypes.includes(utility.type)) {
+          setType("Custom");
+          setCustomType(utility.type);
+        }
       } catch (error) {
         showToast(
           "Failed to fetch utility details. Please try again.",
@@ -77,7 +84,6 @@ const EditUtility = () => {
         date,
         description,
         type: finalType,
-        property: selectedProperty,
       });
 
       showToast("Utility updated successfully!", "success");
@@ -103,34 +109,34 @@ const EditUtility = () => {
       <div className="p-6 max-w-lg mx-auto bg-white shadow-md">
         <h2 className="text-2xl font-bold mb-4">Edit Utility</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
+        <label className="block mb-2">Property:</label>
+        <select
+          value={selectedProperty || "N/A"}
+          onChange={(e) => setSelectedProperty(e.target.value)}
+          className="w-full p-2 border rounded"
+          disabled
+        >
+          <option value="">Select Property</option>
+          {selectedProperty && (
+            <option value={selectedProperty}>{selectedProperty}</option>
+          )}
+        </select>
+
+        <label className="block mt-4 mb-2">Tenant:</label>
+        <select
+          value={selectedRenterFirstName || "N/A"}
+          className="w-full p-2 border rounded"
+          disabled
+        >
+          <option value="">Select Tenant</option>
+          {selectedRenterFirstName && selectedRenterLastName && (
+            <option value={selectedRenterFirstName}>
+              {selectedRenterFirstName} {selectedRenterLastName}
+            </option>
+          )}
+        </select>
+
         <form onSubmit={handleSubmit}>
-          <label className="block mb-2">Property:</label>
-          <select
-            value={selectedProperty}
-            onChange={(e) => setSelectedProperty(e.target.value)}
-            className="w-full p-2 border rounded"
-            disabled
-          >
-            <option value="">Select Property</option>
-            {selectedProperty && (
-              <option value={selectedProperty}>{selectedProperty}</option>
-            )}
-          </select>
-
-          <label className="block mt-4 mb-2">Tenant:</label>
-          <select
-            value={selectedRenterFirstName}
-            className="w-full p-2 border rounded"
-            disabled
-          >
-            <option value="">Select Tenant</option>
-            {selectedRenterFirstName && selectedRenterLastName && (
-              <option value={selectedRenterFirstName}>
-                {selectedRenterFirstName} {selectedRenterLastName}
-              </option>
-            )}
-          </select>
-
           <label className="block mt-4 mb-2">Type of Utility:</label>
           <select
             value={type}

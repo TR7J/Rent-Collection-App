@@ -21,7 +21,7 @@ interface Renter {
   firstName: string;
   lastName: string;
   location: string;
-  property: string;
+  property: { name: string };
   email: string;
   phone: string;
   paymentStatus: PaymentStatus;
@@ -315,7 +315,9 @@ const Tenants = () => {
                   <p className="text-sm uppercase text-gray-800 font-bold">
                     Payment Status
                   </p>
-                  <p className="text-sm text-violet-500">{renter.property}</p>
+                  <p className="text-sm text-violet-500">
+                    {renter.property.name}
+                  </p>
                 </div>
 
                 <div
@@ -355,7 +357,7 @@ const Tenants = () => {
                       handleMessage(
                         renter.phone,
                         renter.firstName,
-                        renter.property,
+                        renter.property.name,
                         renter.paymentStatus
                       )
                     }
@@ -376,7 +378,7 @@ const Tenants = () => {
                       handleWhatsApp(
                         renter.phone,
                         renter.firstName,
-                        renter.property,
+                        renter.property.name,
                         renter.paymentStatus
                       )
                     }
@@ -398,7 +400,7 @@ const Tenants = () => {
                       handleEmail(
                         renter.email,
                         renter.firstName,
-                        renter.property,
+                        renter.property.name,
                         renter.paymentStatus
                       )
                     }

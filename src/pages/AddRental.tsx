@@ -27,6 +27,7 @@ const AddRental = () => {
   const navigate = useNavigate();
   const [properties, setProperties] = useState<Property[]>([]);
   const [renters, setRenters] = useState<Renter[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [utilities, setUtilities] = useState<Utility[]>([]);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(
     null
@@ -226,6 +227,7 @@ const AddRental = () => {
     console.log("Final Form Data:", finalFormData);
 
     try {
+      setLoading(true);
       await axios.post("/api/admin/addrental", finalFormData);
       showToast("Rental added successfully!", "success");
       fetchDashboardSummary();
@@ -456,8 +458,9 @@ const AddRental = () => {
             <button
               type="submit"
               className="bg-violet-500 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-violet-600 w-full"
+              disabled={loading}
             >
-              Add Rental
+              {loading ? "Processing..." : "Add Rental"}
             </button>
           </div>
         </form>

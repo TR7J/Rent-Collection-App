@@ -6,7 +6,7 @@ import { useDashboard } from "../context/DashboardContext";
 
 const AddProperty: React.FC = () => {
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     name: "",
     type: "House",
@@ -45,6 +45,7 @@ const AddProperty: React.FC = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       const formDataToSend = new FormData();
 
       // Append text fields
@@ -206,8 +207,9 @@ const AddProperty: React.FC = () => {
             <button
               type="submit"
               className="bg-violet-500 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-violet-600 transition duration-200 w-full"
+              disabled={loading}
             >
-              Add Property
+              {loading ? "Processing..." : "Add Property"}
             </button>
           </div>
         </form>

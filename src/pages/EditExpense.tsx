@@ -25,6 +25,7 @@ interface ExpenseData {
 }
 
 const EditExpense: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const { expenseId } = useParams();
   const navigate = useNavigate();
   const [properties, setProperties] = useState<Property[]>([]);
@@ -102,6 +103,7 @@ const EditExpense: React.FC = () => {
   // Handle form submission
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.put(`/api/admin/expenses/${expenseId}`, expenseData);
       showToast("Expense updated successfully", "success");
@@ -235,8 +237,9 @@ const EditExpense: React.FC = () => {
         <button
           type="submit"
           className="bg-violet-500 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-violet-600 transition duration-200 w-full"
+          disabled={loading}
         >
-          Update Expense
+          {loading ? "Updating..." : "Update Expense"}
         </button>
       </form>
     </div>

@@ -138,23 +138,72 @@ const Rentals = () => {
     amount: number,
     dueDate: string
   ) => {
-    const subject = encodeURIComponent(
-      `Urgent: Outstanding Rent Payment for ${propertyName}`
-    );
+    let message = "";
 
-    const body = encodeURIComponent(
-      `Dear ${firstName},\n\n` +
-        `We would like to remind you that your rent payment for ${propertyName} is currently ${paymentStatus}.\n\n` +
-        `Amount Due: KES ${amount}\n` +
-        `Due Date: ${dueDate}\n\n` +
-        `To avoid penalties or further action, please make the payment as soon as possible. If you have already made the payment, kindly disregard this message.\n\n` +
-        `Best regards,\n` +
-        `${userInfo?.name}\n` +
-        `RentaHub`
-    );
+    switch (paymentStatus) {
+      case "Paid":
+        message =
+          `Subject: Payment Confirmation for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We confirm that your rent payment for ${propertyName} has been successfully received. Thank you for your timely payment.\n\n` +
+          `If you need any further assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
 
-    // Open the default email app with the pre-filled message
-    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+      case "Partially Paid":
+        message =
+          `Subject: Partial Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We have received a partial payment for your rent at ${propertyName}. The remaining balance is KES ${amount}, due by ${dueDate}.\n\n` +
+          `Kindly complete the payment to avoid penalties. If you have any concerns, please reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Pending":
+        message =
+          `Subject: Rent Payment Reminder for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `This is a gentle reminder that your rent payment for ${propertyName} is pending.\n\n` +
+          `Amount Due: KES ${amount}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `Kindly ensure payment is made on time to avoid any late fees.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Overdue":
+        message =
+          `Subject: Urgent - Overdue Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We would like to inform you that your rent payment for ${propertyName} is overdue.\n\n` +
+          `Outstanding Amount: KES ${amount}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `To avoid further penalties or legal action, please settle the payment immediately. If you have already made the payment, kindly disregard this message.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      default:
+        message =
+          `Subject: Rent Payment Status for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `Please be informed that your rent payment status for ${propertyName} is recorded as ${paymentStatus}.\n\n` +
+          `If you have any questions or need assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+    }
+
+    window.location.href = `mailto:${email}?body=${encodeURIComponent(
+      message
+    )}`;
   };
 
   const handleMessage = (
@@ -165,20 +214,73 @@ const Rentals = () => {
     amount: number,
     dueDate: string
   ) => {
-    const message = encodeURIComponent(
-      `Subject: Urgent: Outstanding Rent Payment for Your Property\n\n` +
-        `Dear ${firstName},\n\n` +
-        `We would like to remind you that your rent payment for ${propertyName} is currently ${paymentStatus}.\n\n` +
-        `Amount Due: KES ${amount}\n` +
-        `Due Date: ${dueDate}\n\n` +
-        `To avoid penalties or further action, please make the payment as soon as possible. If you have already made the payment, kindly disregard this message.\n\n` +
-        `Best regards,\n` +
-        `${userInfo?.name}\n` +
-        `RentaHub`
-    );
+    let message = "";
 
-    // Open SMS
-    window.location.href = `sms:${phoneNumber}?body=${message}`;
+    switch (paymentStatus) {
+      case "Paid":
+        message =
+          `Subject: Payment Confirmation for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `Your rent payment for ${propertyName} has been successfully received. Thank you for your timely payment.\n\n` +
+          `If you need any assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Partially Paid":
+        message =
+          `Subject: Partial Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We have received a partial payment for your rent at ${propertyName}. The remaining balance is KES ${amount}, due by ${dueDate}.\n\n` +
+          `Kindly complete the payment to avoid penalties. If you have any concerns, please reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Pending":
+        message =
+          `Subject: Rent Payment Reminder for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `This is a reminder that your rent payment for ${propertyName} is still pending.\n\n` +
+          `Amount Due: KES ${amount}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `Please ensure payment is made on time to avoid any late fees.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Overdue":
+        message =
+          ` Subject: Urgent - Overdue Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `Your rent payment for ${propertyName} is overdue.\n\n` +
+          `Outstanding Amount: KES ${amount}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `To avoid penalties or legal action, please settle the payment immediately. If you have already made the payment, kindly disregard this message.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      default:
+        message =
+          `Subject: Rent Payment Status for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `Your rent payment status for ${propertyName} is recorded as ${paymentStatus}.\n\n` +
+          `If you have any questions or need assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+    }
+
+    // Open SMS with pre-filled message
+    window.location.href = `sms:${phoneNumber}?body=${encodeURIComponent(
+      message
+    )}`;
   };
 
   const handleWhatsApp = (
@@ -189,20 +291,74 @@ const Rentals = () => {
     due: number,
     dueDate: string
   ) => {
-    const message = encodeURIComponent(
-      `Subject: Urgent: Outstanding Rent Payment for Your Property\n\n` +
-        `Dear ${firstName},\n\n` +
-        `We would like to remind you that your rent payment for ${propertyName} is currently ${paymentStatus}.\n\n` +
-        `Amount Due: KES ${due}\n` +
-        `Due Date: ${dueDate}\n\n` +
-        `To avoid penalties or further action, please make the payment as soon as possible. If you have already made the payment, kindly disregard this message.\n\n` +
-        `Best regards,\n` +
-        `${userInfo?.name}\n` +
-        `RentaHub`
-    );
+    let message = "";
 
-    // Open WhatsApp
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
+    switch (paymentStatus) {
+      case "Paid":
+        message =
+          `Subject: Payment Confirmation for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We confirm that your rent payment for ${propertyName} has been successfully received. Thank you for your timely payment.\n\n` +
+          `If you need any further assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Partially Paid":
+        message =
+          `Subject: Partial Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We have received a partial payment for your rent at ${propertyName}. The remaining balance is KES ${due}, due by ${dueDate}.\n\n` +
+          `Kindly complete the payment to avoid penalties. If you have any concerns, please reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Pending":
+        message =
+          `Subject: Rent Payment Reminder for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `This is a gentle reminder that your rent payment for ${propertyName} is pending.\n\n` +
+          `Amount Due: KES ${due}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `Kindly ensure payment is made on time to avoid any late fees.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Overdue":
+        message =
+          `Subject: Urgent - Overdue Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We would like to inform you that your rent payment for ${propertyName} is overdue.\n\n` +
+          `Outstanding Amount: KES ${due}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `To avoid further penalties or legal action, please settle the payment immediately. If you have already made the payment, kindly disregard this message.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      default:
+        message =
+          `Subject: Rent Payment Status for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `Please be informed that your rent payment status for ${propertyName} is recorded as ${paymentStatus}.\n\n` +
+          `If you have any questions or need assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+    }
+
+    // Encode and open WhatsApp
+    window.open(
+      `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
   };
 
   return (
@@ -511,13 +667,13 @@ const Rentals = () => {
 
               <div className="flex justify-between mt-2">
                 <Link to={`/addpayment/${rental._id}`}>
-                  <button className="bg-violet-500 text-white font-bold px-2 py-1 rounded-sm">
+                  <button className="bg-violet-500 text-white font-bold px-2 py-1 rounded-sm ">
                     Add Payment
                   </button>
                 </Link>
                 <Link to={`/addUtility/${rental._id}`}>
                   <button className="bg-violet-500 text-white font-bold px-2 py-1 rounded-sm">
-                    Add Utility
+                    Pay Utility
                   </button>
                 </Link>
               </div>

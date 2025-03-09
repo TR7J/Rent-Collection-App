@@ -18,10 +18,12 @@ import {
   TableHeader,
   TableRow,
 } from "../components/ui/table";
+import { calculateBalance } from "../utils/calculateBalance";
 
 const Dashboard = () => {
   type Active = "Month" | "Year";
   const [activePart, setActivePart] = useState<Active>("Month");
+  const [isReminderModalOpen, setReminderModalOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<number>(
     new Date().getMonth()
   );
@@ -34,7 +36,6 @@ const Dashboard = () => {
     totalRenters,
     totalProperties,
     totalEarnings,
-    overdueCount,
     earnings,
     expenses,
     utilities,
@@ -43,8 +44,32 @@ const Dashboard = () => {
     paymentsEarnings,
     paymentsPastDue,
     rentals,
+    fetchDashboardSummary,
+    fetchChartSummary,
     fetchPaymentsSummary,
+    fetchRentals,
   } = useDashboard();
+
+  // Function to open modal
+  const openReminderModal = () => {
+    console.log(openReminderModal);
+    setReminderModalOpen(true);
+  };
+
+  // Function to close modal
+  const closeReminderModal = () => {
+    setReminderModalOpen(false);
+  };
+
+  // Function to handle reminder selection
+  const handleReminder = (type: string) => {
+    console.log(type);
+    closeReminderModal();
+  };
+
+  useEffect(() => {
+    fetchDashboardSummary(), fetchChartSummary(), fetchRentals();
+  }, []);
 
   const { state } = useContext(Store);
   const { userInfo } = state;
@@ -96,12 +121,15 @@ const Dashboard = () => {
   };
 
   // Calculate total for the pie chart
-  const total = [earnings, expenses, utilities, overdues, deposits].reduce(
-    (sum, value) => sum + value,
-    0
+
+  const balance: number = calculateBalance(
+    earnings,
+    deposits,
+    expenses,
+    utilities
   );
 
-  // Pie chart data
+  // All data
   const data = [
     { name: "Earnings", value: earnings, color: "#4F46E5" },
     { name: "Expenses", value: expenses, color: "#EF4444" },
@@ -109,6 +137,245 @@ const Dashboard = () => {
     { name: "Overdues", value: overdues, color: "#F59E0B" },
     { name: "Deposits", value: deposits, color: "#6366F1" },
   ];
+
+  // Pie chart data
+  const pieChartData = [
+    { name: "Earnings", value: earnings, color: "#4F46E5" },
+    { name: "Expenses", value: expenses, color: "#EF4444" },
+    { name: "Utilities", value: utilities, color: "#10B981" },
+    { name: "Deposits", value: deposits, color: "#6366F1" },
+  ];
+
+  const handleEmail = (
+    email: string,
+    firstName: string,
+    propertyName: string,
+    paymentStatus: string,
+    due: number,
+    dueDate: string
+  ) => {
+    let message = "";
+
+    switch (paymentStatus) {
+      case "Paid":
+        message =
+          `Subject: Payment Confirmation for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We confirm that your rent payment for ${propertyName} has been successfully received. Thank you for your timely payment.\n\n` +
+          `If you need any further assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Partially Paid":
+        message =
+          `Subject: Partial Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We have received a partial payment for your rent at ${propertyName}. The remaining balance is KES ${due}, due by ${dueDate}.\n\n` +
+          `Kindly complete the payment to avoid penalties. If you have any concerns, please reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Pending":
+        message =
+          `Subject: Rent Payment Reminder for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `This is a gentle reminder that your rent payment for ${propertyName} is pending.\n\n` +
+          `Amount Due: KES ${due}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `Kindly ensure payment is made on time to avoid any late fees.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Overdue":
+        message =
+          `Subject: Urgent - Overdue Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We would like to inform you that your rent payment for ${propertyName} is overdue.\n\n` +
+          `Outstanding Amount: KES ${due}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `To avoid further penalties or legal action, please settle the payment immediately. If you have already made the payment, kindly disregard this message.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      default:
+        message =
+          `Subject: Rent Payment Status for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `Please be informed that your rent payment status for ${propertyName} is recorded as ${paymentStatus}.\n\n` +
+          `If you have any questions or need assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+    }
+
+    window.location.href = `mailto:${email}?body=${encodeURIComponent(
+      message
+    )}`;
+  };
+
+  const handleMessage = (
+    phoneNumber: string,
+    firstName: string,
+    propertyName: string,
+    paymentStatus: string,
+    due: number,
+    dueDate: string
+  ) => {
+    let message = "";
+
+    switch (paymentStatus) {
+      case "Paid":
+        message =
+          `Subject: Payment Confirmation for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `Your rent payment for ${propertyName} has been successfully received. Thank you for your timely payment.\n\n` +
+          `If you need any assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Partially Paid":
+        message =
+          `Subject: Partial Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We have received a partial payment for your rent at ${propertyName}. The remaining balance is KES ${due}, due by ${dueDate}.\n\n` +
+          `Kindly complete the payment to avoid penalties. If you have any concerns, please reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Pending":
+        message =
+          `Subject: Rent Payment Reminder for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `This is a reminder that your rent payment for ${propertyName} is still pending.\n\n` +
+          `Amount Due: KES ${due}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `Please ensure payment is made on time to avoid any late fees.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Overdue":
+        message =
+          ` Subject: Urgent - Overdue Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `Your rent payment for ${propertyName} is overdue.\n\n` +
+          `Outstanding Amount: KES ${due}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `To avoid penalties or legal action, please settle the payment immediately. If you have already made the payment, kindly disregard this message.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      default:
+        message =
+          `Subject: Rent Payment Status for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `Your rent payment status for ${propertyName} is recorded as ${paymentStatus}.\n\n` +
+          `If you have any questions or need assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+    }
+
+    // Open SMS with pre-filled message
+    window.location.href = `sms:${phoneNumber}?body=${encodeURIComponent(
+      message
+    )}`;
+  };
+
+  const handleWhatsApp = (
+    phoneNumber: string,
+    firstName: string,
+    propertyName: string,
+    paymentStatus: string,
+    due: number,
+    dueDate: string
+  ) => {
+    let message = "";
+
+    switch (paymentStatus) {
+      case "Paid":
+        message =
+          `Subject: Payment Confirmation for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We confirm that your rent payment for ${propertyName} has been successfully received. Thank you for your timely payment.\n\n` +
+          `If you need any further assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Partially Paid":
+        message =
+          `Subject: Partial Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We have received a partial payment for your rent at ${propertyName}. The remaining balance is KES ${due}, due by ${dueDate}.\n\n` +
+          `Kindly complete the payment to avoid penalties. If you have any concerns, please reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Pending":
+        message =
+          `Subject: Rent Payment Reminder for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `This is a gentle reminder that your rent payment for ${propertyName} is pending.\n\n` +
+          `Amount Due: KES ${due}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `Kindly ensure payment is made on time to avoid any late fees.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      case "Overdue":
+        message =
+          `Subject: Urgent - Overdue Rent Payment for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `We would like to inform you that your rent payment for ${propertyName} is overdue.\n\n` +
+          `Outstanding Amount: KES ${due}\n` +
+          `Due Date: ${dueDate}\n\n` +
+          `To avoid further penalties or legal action, please settle the payment immediately. If you have already made the payment, kindly disregard this message.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+
+      default:
+        message =
+          `Subject: Rent Payment Status for ${propertyName}\n\n` +
+          `Dear ${firstName},\n\n` +
+          `Please be informed that your rent payment status for ${propertyName} is recorded as ${paymentStatus}.\n\n` +
+          `If you have any questions or need assistance, feel free to reach out.\n\n` +
+          `Best regards,\n` +
+          `${userInfo?.name}\n` +
+          `RentaHub`;
+        break;
+    }
+
+    // Encode and open WhatsApp
+    window.open(
+      `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
+  };
 
   return (
     <div className="px-3 md:px-12 py-4 min-h-screen">
@@ -194,20 +461,23 @@ const Dashboard = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth="1.5"
+                  stroke-width="1.5"
                   stroke="currentColor"
                   className="size-12"
                 >
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m4.5 4.5 15 15m0 0V8.25m0 11.25H8.25"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z"
                   />
                 </svg>
+
                 <span className="text-sm uppercase font-semibold text-violet-500 whitespace-nowrap">
-                  Rent Overdue
+                  Expenses
                 </span>
-                <span className="text-2xl font-bold mt-1">{overdueCount}</span>
+                <span className="text-base md:text-xl font-bold mt-1 text-red-500">
+                  KES {expenses}
+                </span>
               </div>
             </div>
           </div>
@@ -353,6 +623,7 @@ const Dashboard = () => {
                             strokeWidth="1.5"
                             stroke="currentColor"
                             className="size-5 ml-2 flex-shrink-0"
+                            onClick={openReminderModal}
                           >
                             <path
                               strokeLinecap="round"
@@ -361,6 +632,83 @@ const Dashboard = () => {
                             />
                           </svg>
                         </div>
+                        {/* Reminder Modal */}
+                        {isReminderModalOpen && (
+                          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <div className="bg-white p-5 flex flex-col rounded shadow-lg w-80">
+                              <h2 className="text-lg font-bold mb-3 text-center">
+                                Send Payment Reminder
+                              </h2>
+
+                              <button
+                                className="bg-violet-500 text-white py-2 mb-2 rounded"
+                                onClick={() => {
+                                  handleReminder("Email");
+                                  handleEmail(
+                                    rental.renter.email,
+                                    rental.renter.firstName,
+                                    rental.property.name,
+                                    rental.renter.paymentStatus,
+                                    rental.dues,
+                                    format(
+                                      new Date(rental.deadline),
+                                      "dd-MM-yyyy"
+                                    )
+                                  );
+                                }}
+                              >
+                                Send via Email
+                              </button>
+
+                              <button
+                                className="bg-green-500 text-white  py-2 mb-2 rounded"
+                                onClick={() => {
+                                  handleReminder("WhatsApp");
+                                  handleWhatsApp(
+                                    rental.renter.phone,
+                                    rental.renter.firstName,
+                                    rental.property.name,
+                                    rental.renter.paymentStatus,
+                                    rental.dues,
+                                    format(
+                                      new Date(rental.deadline),
+                                      "dd-MM-yyyy"
+                                    )
+                                  );
+                                }}
+                              >
+                                Send via WhatsApp
+                              </button>
+
+                              <button
+                                className="bg-blue-500 text-white  py-2 rounded"
+                                onClick={() => {
+                                  handleReminder("SMS");
+                                  handleMessage(
+                                    rental.renter.phone,
+                                    rental.renter.firstName,
+                                    rental.property.name,
+                                    rental.renter.paymentStatus,
+                                    rental.dues,
+                                    format(
+                                      new Date(rental.deadline),
+                                      "dd-MM-yyy"
+                                    )
+                                  );
+                                }}
+                              >
+                                Send via SMS
+                              </button>
+
+                              <button
+                                className="mt-4 bg-gray-300  py-2 rounded"
+                                onClick={closeReminderModal}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
                         <span className="font-bold whitespace-normal">
                           Paid:{" "}
                           <span className="text-green-600 font-extrabold">
@@ -443,7 +791,7 @@ const Dashboard = () => {
           <Card className="sm:w-full md:w-2/3 lg:w-full border border-gray-300 bg-gray-50 shadow-sm rounded-none">
             <CardHeader className="py-3">
               <CardTitle className="text-2xl font-bold text-center text-gray-800 ">
-                Total breakdown
+                Balance
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -451,7 +799,7 @@ const Dashboard = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={data}
+                      data={pieChartData}
                       cx="50%"
                       cy="50%"
                       innerRadius="60%"
@@ -459,7 +807,7 @@ const Dashboard = () => {
                       paddingAngle={2}
                       dataKey="value"
                     >
-                      {data.map((entry, index) => (
+                      {pieChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
@@ -468,7 +816,7 @@ const Dashboard = () => {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-base md:text-xl lg:text-2xl font-bold">
-                      {total.toLocaleString("en-US", {
+                      {balance.toLocaleString("en-US", {
                         style: "currency",
                         currency: "KES",
                         minimumFractionDigits: 0,
@@ -478,7 +826,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <Table className="mt-4">
+              <Table className="mt-4 p-0">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[40px]"></TableHead>
@@ -507,6 +855,9 @@ const Dashboard = () => {
                   ))}
                 </TableBody>
               </Table>
+              <div className="text-xs text-center mt-1 ml-2 text-gray-500">
+                Overdues are not part of the balance
+              </div>
             </CardContent>
           </Card>
         </div>

@@ -28,7 +28,9 @@ const EditProperty = () => {
     description: "",
     image: "",
   });
-  const [loading, setLoading] = useState(true);
+
+  const [loading, setLoading] = useState<boolean>(true);
+  const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -75,7 +77,7 @@ const EditProperty = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoadingButton(true);
     try {
       await axios.put(`/api/admin/updateproperty/${propertyId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -263,8 +265,9 @@ const EditProperty = () => {
             <button
               type="submit"
               className="bg-violet-500 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-violet-600 transition duration-200 w-full"
+              disabled={loadingButton}
             >
-              Save Changes
+              {loadingButton ? "Updating..." : "Update Property"}
             </button>
           </div>
         </form>

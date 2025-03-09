@@ -28,6 +28,7 @@ interface ExpenseData {
 const AddExpense: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [renters, setRenters] = useState<Renter[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [expenseData, setExpenseData] = useState<ExpenseData>({
     property: "",
     renter: "",
@@ -83,7 +84,9 @@ const AddExpense: React.FC = () => {
   // Handle form submission
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
+
     try {
+      setLoading(true);
       await axios.post("/api/admin/addexpense", expenseData);
       showToast("Expense Added Successfully", "success");
       fetchChartSummary();
@@ -224,8 +227,9 @@ const AddExpense: React.FC = () => {
         <button
           type="submit"
           className="bg-violet-500 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-violet-600 transition duration-200 w-full"
+          disabled={loading}
         >
-          Add Expense
+          {loading ? "Processing..." : "Add Expense"}
         </button>
       </form>
     </div>

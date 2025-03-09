@@ -9,14 +9,23 @@ interface Renter {
   gender: "Male" | "Female";
   phone: string;
   email: string;
-  property?: string;
+  property?: "";
   paymentStatus?: "Paid" | "Pending" | "Overdue" | "Partially Paid";
   activeStatus: "Active" | "Inactive" | "Past";
   profilePhoto?: string;
 }
 
+interface Property {
+  _id: string;
+  name: string;
+  rentPaid: number;
+  rentalType: "Daily" | "Weekly" | "Monthly" | "Quarterly" | "Yearly";
+}
+
 const EditTenant: React.FC = () => {
   const { renterId } = useParams(); // Get renter ID     from URL params
+  const [loading, setLoading] = useState<boolean>(false);
+  const [properties, setProperties] = useState<Property[]>([]);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<Renter>({
@@ -30,6 +39,28 @@ const EditTenant: React.FC = () => {
     activeStatus: "Active",
     profilePhoto: "",
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const propertyRes = await axios.get("/api/admin/properties");
+        console.log(propertyRes.data);
+        setProperties(propertyRes.data);
+        // Automatically select the first property if available
+        if (propertyRes.data.length > 0) {
+          setFormData((prev) => ({
+            ...prev,
+            property: propertyRes.data[0].name,
+          }));
+        }
+      } catch (error) {
+        showToast("Error fetching data", "error");
+        console.error("Error fetching data", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Fetch renter details when component loads
   useEffect(() => {
@@ -76,6 +107,7 @@ const EditTenant: React.FC = () => {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       await axios.put(`/api/admin/updaterenter/${renterId}`, formData);
@@ -174,14 +206,16 @@ const EditTenant: React.FC = () => {
             <label className="font-semibold text-gray-700">Property</label>
             <select
               name="property"
-              value={formData.property || ""}
+              value={formData.property}
               className="p-3 border rounded-lg focus:ring-2 focus:ring-violet-500"
               onChange={handleChange}
               disabled={formData.activeStatus === "Inactive"}
             >
-              <option value="">Select Property</option>
-              <option value="House 1">House 1</option>
-              <option value="House 2">House 2</option>
+              {properties.map((property) => (
+                <option key={property._id} value={property._id}>
+                  {property.name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -252,8 +286,9 @@ const EditTenant: React.FC = () => {
             <button
               type="submit"
               className="bg-violet-500 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-violet-600 transition duration-200 w-full"
+              disabled={loading}
             >
-              Update Renter
+              {loading ? "Updating..." : "Update Renter"}
             </button>
           </div>
         </form>

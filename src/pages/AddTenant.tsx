@@ -25,6 +25,7 @@ interface Property {
 }
 
 const AddTenant = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [properties, setProperties] = useState<Property[]>([]);
   const [formData, setFormData] = useState<TenantData>({
     firstName: "",
@@ -92,6 +93,7 @@ const AddTenant = () => {
     });
 
     try {
+      setLoading(true);
       await axios.post("/api/admin/addrenter", tenantData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -266,8 +268,9 @@ const AddTenant = () => {
             <button
               type="submit"
               className="bg-violet-500 text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-violet-600 transition duration-200 w-full"
+              disabled={loading}
             >
-              Add Tenant
+              {loading ? "Processing..." : "Add Tenant"}
             </button>
           </div>
         </form>

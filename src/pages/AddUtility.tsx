@@ -14,7 +14,7 @@ const predefinedUtilityTypes = [
 
 const AddUtility = () => {
   const { rentalId } = useParams();
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [selectedProperty, setSelectedProperty] = useState<string>("");
   const [selectedRenterFirstName, setSelectedRenterFirstName] =
     useState<string>("");
@@ -54,6 +54,7 @@ const AddUtility = () => {
     e.preventDefault();
     const finalType = type === "Custom" ? customType : type;
     try {
+      setLoading(true);
       await axios.post(`/api/admin/addutility/${rentalId}`, {
         amount: Number(amount),
         date,
@@ -167,8 +168,11 @@ const AddUtility = () => {
             className="w-full p-2 border rounded"
           />
 
-          <button className="w-full mt-4 bg-violet-500 text-white p-2 rounded">
-            Add Utility
+          <button
+            className="w-full mt-4 bg-violet-500 text-white p-2 rounded"
+            disabled={loading}
+          >
+            {loading ? "Processing..." : "Add Utility"}
           </button>
         </form>
       </div>
