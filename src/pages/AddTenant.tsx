@@ -52,7 +52,7 @@ const AddTenant = () => {
         if (propertyRes.data.length > 0) {
           setFormData((prev) => ({
             ...prev,
-            property: propertyRes.data[0].name,
+            property: propertyRes.data[0]._id,
           }));
         }
       } catch (error) {
