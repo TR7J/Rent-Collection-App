@@ -50,6 +50,7 @@ const Rentals = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isReminderModalOpen, setReminderModalOpen] = useState(false);
+  const [selectedRentalId, setSelectedRentalId] = useState<string | null>(null);
   const { state } = useContext(Store);
   const { userInfo } = state;
   const navigate = useNavigate();
@@ -74,6 +75,15 @@ const Rentals = () => {
   const handleReminder = (type: string) => {
     console.log(type);
     closeReminderModal();
+  };
+
+  // Function to get selected rental object
+  const getSelectedRental = () =>
+    rentals.find((rental) => rental._id === selectedRentalId) || null;
+
+  // Function to handle button clicks
+  const handleSelectRental = (_id: string) => {
+    setSelectedRentalId(_id); // Store only the rental ID
   };
 
   useEffect(() => {
@@ -130,22 +140,18 @@ const Rentals = () => {
       showToast(errorMessage, "error");
     }
   };
-  const handleEmail = (
-    email: string,
-    firstName: string,
-    propertyName: string,
-    paymentStatus: string,
-    amount: number,
-    dueDate: string
-  ) => {
+  const handleEmail = () => {
+    const rental = getSelectedRental();
+    console.log(rental);
+    if (!rental) return alert("No rental selected!");
     let message = "";
 
-    switch (paymentStatus) {
+    switch (rental.renter.paymentStatus) {
       case "Paid":
         message =
-          `Subject: Payment Confirmation for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `We confirm that your rent payment for ${propertyName} has been successfully received. Thank you for your timely payment.\n\n` +
+          `Subject: Payment Confirmation for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `We confirm that your rent payment for ${rental.property.name} has been successfully received. Thank you for your timely payment.\n\n` +
           `If you need any further assistance, feel free to reach out.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -154,9 +160,14 @@ const Rentals = () => {
 
       case "Partially Paid":
         message =
-          `Subject: Partial Rent Payment for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `We have received a partial payment for your rent at ${propertyName}. The remaining balance is KES ${amount}, due by ${dueDate}.\n\n` +
+          `Subject: Partial Rent Payment for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `We have received a partial payment for your rent at ${
+            rental.property.name
+          }. The remaining balance is KES ${rental.dues}, due by ${format(
+            new Date(rental.deadline),
+            "dd-MM-yyyy"
+          )}.\n\n` +
           `Kindly complete the payment to avoid penalties. If you have any concerns, please reach out.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -165,11 +176,11 @@ const Rentals = () => {
 
       case "Pending":
         message =
-          `Subject: Rent Payment Reminder for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `This is a gentle reminder that your rent payment for ${propertyName} is pending.\n\n` +
-          `Amount Due: KES ${amount}\n` +
-          `Due Date: ${dueDate}\n\n` +
+          `Subject: Rent Payment Reminder for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `This is a gentle reminder that your rent payment for ${rental.property.name} is pending.\n\n` +
+          `Amount Due: KES ${rental.dues}\n` +
+          `Due Date: ${format(new Date(rental.deadline), "dd-MM-yyyy")}\n\n` +
           `Kindly ensure payment is made on time to avoid any late fees.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -178,11 +189,11 @@ const Rentals = () => {
 
       case "Overdue":
         message =
-          `Subject: Urgent - Overdue Rent Payment for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `We would like to inform you that your rent payment for ${propertyName} is overdue.\n\n` +
-          `Outstanding Amount: KES ${amount}\n` +
-          `Due Date: ${dueDate}\n\n` +
+          `Subject: Urgent - Overdue Rent Payment for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `We would like to inform you that your rent payment for ${rental.property.name} is overdue.\n\n` +
+          `Outstanding Amount: KES ${rental.dues}\n` +
+          `Due Date: ${format(new Date(rental.deadline), "dd-MM-yyyy")}\n\n` +
           `To avoid further penalties or legal action, please settle the payment immediately. If you have already made the payment, kindly disregard this message.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -191,9 +202,9 @@ const Rentals = () => {
 
       default:
         message =
-          `Subject: Rent Payment Status for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `Please be informed that your rent payment status for ${propertyName} is recorded as ${paymentStatus}.\n\n` +
+          `Subject: Rent Payment Status for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `Please be informed that your rent payment status for ${rental.property.name} is recorded as ${rental.renter.paymentStatus}.\n\n` +
           `If you have any questions or need assistance, feel free to reach out.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -201,28 +212,23 @@ const Rentals = () => {
         break;
     }
 
-    window.location.href = `mailto:${email}?body=${encodeURIComponent(
-      message
-    )}`;
+    window.location.href = `mailto:${
+      rental.renter.email
+    }?body=${encodeURIComponent(message)}`;
   };
 
-  const handleMessage = (
-    phoneNumber: string,
-    firstName: string,
-    propertyName: string,
-    paymentStatus: string,
-    amount: number,
-    dueDate: string
-  ) => {
+  const handleMessage = () => {
+    const rental = getSelectedRental();
+    if (!rental) return alert("No rental selected!");
     let message = "";
 
-    switch (paymentStatus) {
+    switch (rental.renter.paymentStatus) {
       case "Paid":
         message =
-          `Subject: Payment Confirmation for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `Your rent payment for ${propertyName} has been successfully received. Thank you for your timely payment.\n\n` +
-          `If you need any assistance, feel free to reach out.\n\n` +
+          `Subject: Payment Confirmation for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `We confirm that your rent payment for ${rental.property.name} has been successfully received. Thank you for your timely payment.\n\n` +
+          `If you need any further assistance, feel free to reach out.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
           `RentaHub`;
@@ -230,9 +236,14 @@ const Rentals = () => {
 
       case "Partially Paid":
         message =
-          `Subject: Partial Rent Payment for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `We have received a partial payment for your rent at ${propertyName}. The remaining balance is KES ${amount}, due by ${dueDate}.\n\n` +
+          `Subject: Partial Rent Payment for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `We have received a partial payment for your rent at ${
+            rental.property.name
+          }. The remaining balance is KES ${rental.dues}, due by ${format(
+            new Date(rental.deadline),
+            "dd-MM-yyyy"
+          )}.\n\n` +
           `Kindly complete the payment to avoid penalties. If you have any concerns, please reach out.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -241,12 +252,12 @@ const Rentals = () => {
 
       case "Pending":
         message =
-          `Subject: Rent Payment Reminder for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `This is a reminder that your rent payment for ${propertyName} is still pending.\n\n` +
-          `Amount Due: KES ${amount}\n` +
-          `Due Date: ${dueDate}\n\n` +
-          `Please ensure payment is made on time to avoid any late fees.\n\n` +
+          `Subject: Rent Payment Reminder for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `This is a gentle reminder that your rent payment for ${rental.property.name} is pending.\n\n` +
+          `Amount Due: KES ${rental.dues}\n` +
+          `Due Date: ${format(new Date(rental.deadline), "dd-MM-yyyy")}\n\n` +
+          `Kindly ensure payment is made on time to avoid any late fees.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
           `RentaHub`;
@@ -254,12 +265,12 @@ const Rentals = () => {
 
       case "Overdue":
         message =
-          ` Subject: Urgent - Overdue Rent Payment for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `Your rent payment for ${propertyName} is overdue.\n\n` +
-          `Outstanding Amount: KES ${amount}\n` +
-          `Due Date: ${dueDate}\n\n` +
-          `To avoid penalties or legal action, please settle the payment immediately. If you have already made the payment, kindly disregard this message.\n\n` +
+          `Subject: Urgent - Overdue Rent Payment for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `We would like to inform you that your rent payment for ${rental.property.name} is overdue.\n\n` +
+          `Outstanding Amount: KES ${rental.dues}\n` +
+          `Due Date: ${format(new Date(rental.deadline), "dd-MM-yyyy")}\n\n` +
+          `To avoid further penalties or legal action, please settle the payment immediately. If you have already made the payment, kindly disregard this message.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
           `RentaHub`;
@@ -267,9 +278,9 @@ const Rentals = () => {
 
       default:
         message =
-          `Subject: Rent Payment Status for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `Your rent payment status for ${propertyName} is recorded as ${paymentStatus}.\n\n` +
+          `Subject: Rent Payment Status for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `Please be informed that your rent payment status for ${rental.property.name} is recorded as ${rental.renter.paymentStatus}.\n\n` +
           `If you have any questions or need assistance, feel free to reach out.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -278,27 +289,23 @@ const Rentals = () => {
     }
 
     // Open SMS with pre-filled message
-    window.location.href = `sms:${phoneNumber}?body=${encodeURIComponent(
-      message
-    )}`;
+    window.location.href = `sms:${
+      rental.renter.phone
+    }?body=${encodeURIComponent(message)}`;
   };
 
-  const handleWhatsApp = (
-    phoneNumber: string,
-    firstName: string,
-    propertyName: string,
-    paymentStatus: string,
-    due: number,
-    dueDate: string
-  ) => {
+  const handleWhatsApp = () => {
+    const rental = getSelectedRental();
+    console.log("the rental:", rental);
+    if (!rental) return alert("No rental selected!");
     let message = "";
 
-    switch (paymentStatus) {
+    switch (rental.renter.paymentStatus) {
       case "Paid":
         message =
-          `Subject: Payment Confirmation for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `We confirm that your rent payment for ${propertyName} has been successfully received. Thank you for your timely payment.\n\n` +
+          `Subject: Payment Confirmation for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `We confirm that your rent payment for ${rental.property.name} has been successfully received. Thank you for your timely payment.\n\n` +
           `If you need any further assistance, feel free to reach out.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -307,9 +314,14 @@ const Rentals = () => {
 
       case "Partially Paid":
         message =
-          `Subject: Partial Rent Payment for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `We have received a partial payment for your rent at ${propertyName}. The remaining balance is KES ${due}, due by ${dueDate}.\n\n` +
+          `Subject: Partial Rent Payment for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `We have received a partial payment for your rent at ${
+            rental.property.name
+          }. The remaining balance is KES ${rental.dues}, due by ${format(
+            new Date(rental.deadline),
+            "dd-MM-yyyy"
+          )}.\n\n` +
           `Kindly complete the payment to avoid penalties. If you have any concerns, please reach out.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -318,11 +330,11 @@ const Rentals = () => {
 
       case "Pending":
         message =
-          `Subject: Rent Payment Reminder for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `This is a gentle reminder that your rent payment for ${propertyName} is pending.\n\n` +
-          `Amount Due: KES ${due}\n` +
-          `Due Date: ${dueDate}\n\n` +
+          `Subject: Rent Payment Reminder for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `This is a gentle reminder that your rent payment for ${rental.property.name} is pending.\n\n` +
+          `Amount Due: KES ${rental.dues}\n` +
+          `Due Date: ${format(new Date(rental.deadline), "dd-MM-yyyy")}\n\n` +
           `Kindly ensure payment is made on time to avoid any late fees.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -331,11 +343,11 @@ const Rentals = () => {
 
       case "Overdue":
         message =
-          `Subject: Urgent - Overdue Rent Payment for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `We would like to inform you that your rent payment for ${propertyName} is overdue.\n\n` +
-          `Outstanding Amount: KES ${due}\n` +
-          `Due Date: ${dueDate}\n\n` +
+          `Subject: Urgent - Overdue Rent Payment for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `We would like to inform you that your rent payment for ${rental.property.name} is overdue.\n\n` +
+          `Outstanding Amount: KES ${rental.dues}\n` +
+          `Due Date: ${format(new Date(rental.deadline), "dd-MM-yyyy")}\n\n` +
           `To avoid further penalties or legal action, please settle the payment immediately. If you have already made the payment, kindly disregard this message.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -344,9 +356,9 @@ const Rentals = () => {
 
       default:
         message =
-          `Subject: Rent Payment Status for ${propertyName}\n\n` +
-          `Dear ${firstName},\n\n` +
-          `Please be informed that your rent payment status for ${propertyName} is recorded as ${paymentStatus}.\n\n` +
+          `Subject: Rent Payment Status for ${rental.property.name}\n\n` +
+          `Dear ${rental.renter.firstName},\n\n` +
+          `Please be informed that your rent payment status for ${rental.property.name} is recorded as ${rental.renter.paymentStatus}.\n\n` +
           `If you have any questions or need assistance, feel free to reach out.\n\n` +
           `Best regards,\n` +
           `${userInfo?.name}\n` +
@@ -356,7 +368,9 @@ const Rentals = () => {
 
     // Encode and open WhatsApp
     window.open(
-      `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+      `https://wa.me/${rental.renter.phone}?text=${encodeURIComponent(
+        message
+      )}`,
       "_blank"
     );
   };
@@ -551,7 +565,10 @@ const Rentals = () => {
                     stroke-width="1.5"
                     stroke="currentColor"
                     className="size-5 ml-2"
-                    onClick={openReminderModal}
+                    onClick={() => {
+                      openReminderModal();
+                      handleSelectRental(rental._id);
+                    }}
                   >
                     <path
                       stroke-linecap="round"
@@ -561,7 +578,7 @@ const Rentals = () => {
                   </svg>
                 </div>
                 {/* Reminder Modal */}
-                {isReminderModalOpen && (
+                {isReminderModalOpen && selectedRentalId && (
                   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 flex flex-col rounded shadow-lg w-80">
                       <h2 className="text-lg font-bold mb-3 text-center">
@@ -572,14 +589,7 @@ const Rentals = () => {
                         className="bg-violet-500 text-white py-2 mb-2 rounded"
                         onClick={() => {
                           handleReminder("Email");
-                          handleEmail(
-                            rental.renter.email,
-                            rental.renter.firstName,
-                            rental.property.name,
-                            rental.renter.paymentStatus,
-                            rental.dues,
-                            format(new Date(rental.deadline), "dd-MM-yyyy")
-                          );
+                          handleEmail();
                         }}
                       >
                         Send via Email
@@ -589,14 +599,7 @@ const Rentals = () => {
                         className="bg-green-500 text-white  py-2 mb-2 rounded"
                         onClick={() => {
                           handleReminder("WhatsApp");
-                          handleWhatsApp(
-                            rental.renter.phone,
-                            rental.renter.firstName,
-                            rental.property.name,
-                            rental.renter.paymentStatus,
-                            rental.amount,
-                            format(new Date(rental.deadline), "dd-MM-yyyy")
-                          );
+                          handleWhatsApp();
                         }}
                       >
                         Send via WhatsApp
@@ -606,14 +609,7 @@ const Rentals = () => {
                         className="bg-blue-500 text-white  py-2 rounded"
                         onClick={() => {
                           handleReminder("SMS");
-                          handleMessage(
-                            rental.renter.phone,
-                            rental.renter.firstName,
-                            rental.property.name,
-                            rental.renter.paymentStatus,
-                            rental.dues,
-                            format(new Date(rental.deadline), "dd-MM-yyy")
-                          );
+                          handleMessage();
                         }}
                       >
                         Send via SMS
