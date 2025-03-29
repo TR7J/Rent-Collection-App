@@ -19,6 +19,7 @@ import {
   TableRow,
 } from "../components/ui/table";
 import { calculateBalance } from "../utils/calculateBalance";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   type Active = "Month" | "Year";
@@ -378,19 +379,22 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="px-3 md:px-12 py-4 min-h-screen">
+    <div className="px-6 py-4 min-h-screen">
       <h1 className="text-3xl font-bold mt-2">
         Jambo, <span className="text-violet-500">{userInfo?.name}</span>
       </h1>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-4">
+        <div className="xl:col-span-2">
           <div>
             <h2 className="text-base uppercase text-gray-500 font-semibold">
               Summary
             </h2>
 
             <div className="grid grid-cols-2 w-full md:grid-cols-4 gap-0 shadow-sm h-44 bg-gray-50">
-              <div className="flex flex-col items-center justify-center border border-gray-300 p-2">
+              <Link
+                to="/tenants"
+                className="flex flex-col items-center justify-center border border-gray-300 p-2"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -409,9 +413,12 @@ const Dashboard = () => {
                 <span className="text-sm uppercase font-semibold text-violet-500">
                   Tenants
                 </span>
-                <span className="text-2xl font-bold mt-1">{totalRenters}</span>
-              </div>
-              <div className="flex flex-col items-center justify-center border border-gray-300 p-2">
+                <span className="text-base font-bold mt-1">{totalRenters}</span>
+              </Link>
+              <Link
+                to="/properties"
+                className="flex flex-col items-center justify-center border border-gray-300 p-2"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -429,11 +436,15 @@ const Dashboard = () => {
                 <span className="text-sm uppercase font-semibold text-violet-500">
                   Properties
                 </span>
-                <span className="text-2xl font-bold mt-1">
+                <span className="text-base font-bold mt-1">
                   {totalProperties}
                 </span>
-              </div>
-              <div className="flex flex-col items-center justify-center border border-gray-300 p-2">
+              </Link>
+
+              <Link
+                to="#"
+                className="flex flex-col items-center justify-center border border-gray-300 p-2"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -452,11 +463,15 @@ const Dashboard = () => {
                 <span className="text-sm uppercase font-semibold text-violet-500">
                   Earnings
                 </span>
-                <span className="text-base md:text-xl font-bold mt-1 text-green-500">
+                <span className="text-base font-bold mt-1 text-green-500">
                   KES {totalEarnings.toLocaleString()}
                 </span>
-              </div>
-              <div className="flex flex-col items-center justify-center border border-gray-300 p-2">
+              </Link>
+
+              <Link
+                to="/expenses"
+                className="flex flex-col items-center justify-center border border-gray-300 p-2"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -475,10 +490,10 @@ const Dashboard = () => {
                 <span className="text-sm uppercase font-semibold text-violet-500 whitespace-nowrap">
                   Expenses
                 </span>
-                <span className="text-base md:text-xl font-bold mt-1 text-red-500">
+                <span className="text-base font-bold mt-1 text-red-500">
                   KES {expenses}
                 </span>
-              </div>
+              </Link>
             </div>
           </div>
 
@@ -788,7 +803,7 @@ const Dashboard = () => {
           <h2 className="text-base uppercase text-gray-500 font-semibold">
             CHART
           </h2>
-          <Card className="sm:w-full md:w-2/3 lg:w-full border border-gray-300 bg-gray-50 shadow-sm rounded-none">
+          <Card className="w-full border border-gray-300 bg-gray-50 shadow-sm rounded-none">
             <CardHeader className="py-3">
               <CardTitle className="text-2xl font-bold text-center text-gray-800 ">
                 Balance

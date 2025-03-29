@@ -50,7 +50,7 @@ const Payments = () => {
     }
   };
   return (
-    <div className="px-12 py-4">
+    <div className="px-6 py-4">
       <div className="flex justify-between items-center">
         <h1 className="text-xl md:text-2xl font-bold mr-3">Payment History</h1>
         <div className="flex items-center justify-center gap-1 text-sm font-semibold border rounded-md bg-gray-300 hover:bg-violet-500 hover:text-white duration-75 ease-in-out cursor-pointer p-2">

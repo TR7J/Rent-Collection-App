@@ -161,7 +161,7 @@ const Tenants = () => {
   };
 
   return (
-    <div className="px-12 py-4 mx-2 ">
+    <div className="px-6 py-4 mx-2 ">
       <div className="flex justify-between items-center">
         <h1 className="text-xl md:text-2xl font-bold mr-3">
           {activePart} Tenants ({filteredRenters.length})

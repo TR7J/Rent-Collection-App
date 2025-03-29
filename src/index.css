@@ -41,6 +41,14 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -67,6 +75,14 @@ body {
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 @layer base {
@@ -84,5 +100,111 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* YouTube sidebar specific styles */
+@layer components {
+  .sidebar-menu-button {
+    @apply flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-200 ease-in-out w-full text-left;
+  }
+
+  .sidebar-menu-button:hover {
+    @apply bg-youtube-hover;
+  }
+
+  .sidebar-menu-button.active {
+    @apply bg-youtube-secondary;
+  }
+
+  .sidebar-menu-icon {
+    @apply w-5 h-5 min-w-5;
+  }
+
+  .sidebar-menu-text {
+    @apply text-xs font-normal whitespace-nowrap transition-opacity duration-200;
+  }
+
+  .sidebar-divider {
+    @apply my-1 border-t border-youtube-border w-full transition-all duration-200;
+  }
+
+  /* Animations for sidebar */
+  .sidebar-container {
+    @apply transition-all duration-300 ease-in-out overflow-hidden;
+  }
+
+  .sidebar-expanded {
+    @apply w-36;
+  }
+
+  .sidebar-collapsed {
+    @apply w-16;
+  }
+
+  /* Animations for fade in/out */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+
+  .animate-fade-out {
+    animation: fade-out 0.3s ease-out forwards;
+  }
+}
+
+/* YouTube bottom navigation styles */
+@layer components {
+  @keyframes slide-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-down {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(100%);
+    }
+  }
+
+  .bottom-nav-enter {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  .bottom-nav-exit {
+    animation: slide-down 0.3s ease-out;
   }
 }

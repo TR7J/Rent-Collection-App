@@ -376,7 +376,7 @@ const Rentals = () => {
   };
 
   return (
-    <div className="px-12 py-4">
+    <div className="px-6 py-4">
       <div className="flex justify-between items-center">
         <h1 className="text-xl md:text-2xl font-bold mr-3">
           Rentals({filteredRentals.length})

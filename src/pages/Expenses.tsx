@@ -152,7 +152,7 @@ export default function ExpenseList() {
   };
 
   return (
-    <div className="px-12 py-4">
+    <div className="px-6 py-4">
       <div>
         <h1 className="text-center text-2xl font-bold">Expenses Center</h1>
         <div className="flex justify-center">
