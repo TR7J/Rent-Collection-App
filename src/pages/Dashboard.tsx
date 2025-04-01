@@ -379,7 +379,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="px-6 py-4 min-h-screen">
+    <div className="px-6 py-4 w-screen sm:w-full min-h-screen">
       <h1 className="text-3xl font-bold mt-2">
         Jambo, <span className="text-violet-500">{userInfo?.name}</span>
       </h1>

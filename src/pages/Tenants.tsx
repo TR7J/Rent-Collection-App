@@ -161,18 +161,18 @@ const Tenants = () => {
   };
 
   return (
-    <div className="px-6 py-4 mx-2 ">
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl md:text-2xl font-bold mr-3">
+    <div className="px-6 py-4 w-screen sm:w-full min-h-screen">
+      <div className="flex justify-between items-center gap-2 whitespace-nowrap sm:gap-0 p-1 sm:p-0">
+        <h1 className="text-base md:text-2xl font-bold mr-3">
           {activePart} Tenants ({filteredRenters.length})
         </h1>
-        <div className="p-2 flex gap-1 border border-gray-300 rounded-sm">
+        <div className="p-1 sm:p-2 flex gap-1 border border-gray-300 rounded-sm">
           {["Active", "Inactive", "Past"].map((tab) => (
             <span
               key={tab}
-              className={`p-1 rounded-sm cursor-pointer text-gray-500 ${
+              className={`${
                 activePart === tab ? "bg-violet-500 text-white" : ""
-              }`}
+              } p-1 rounded-sm cursor-pointer text-gray-500 text-xs sm:text-sm flex items-center justify-center min-w-[20px] sm:min-w-[50px] text-center`}
               onClick={() => setActivePart(tab as ActivePart)}
             >
               {tab}
@@ -181,10 +181,10 @@ const Tenants = () => {
         </div>
       </div>
 
-      <div>
+      <div className="mt-2">
         <h1 className="text-center text-2xl font-bold">Tenants Center</h1>
-        <div className="flex justify-center">
-          <p className="text-center text-base md:text-xl">
+        <div className="flex md:justify-center mt-1">
+          <p className="text left md:text-center text-base md:text-xl">
             Add, View and Manage Tenants and Tenant Information. Keep track of
             rental agreements, contact details and tenant status all in one
             organized and easy-to-use interface.
@@ -192,14 +192,14 @@ const Tenants = () => {
         </div>
       </div>
 
-      <div className="flex items-center justify-center my-6 gap-3">
-        <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center my-6 gap-2 sm:gap-3 overflow-x-auto w-full">
+        <div className="flex items-center justify-center flex-shrink h-9">
           <input
             type="search"
             name="search"
             id="search"
-            placeholder="Search for a Tenant"
-            className="p-2 rounded-l-md min-w-52 md:min-w-96"
+            placeholder="Search Tenant"
+            className="p-2 rounded-l-md w-[150px] xs:w-[180px] sm:min-w-52 md:min-w-96 text-sm sm:text-base h-full"
           />
           <button className="p-2 bg-violet-500 rounded-r-md">
             <svg
@@ -208,7 +208,7 @@ const Tenants = () => {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              className="size-6 text-white"
+              className="size-5 sm:size-6 text-white"
             >
               <path
                 stroke-linecap="round"
@@ -219,25 +219,24 @@ const Tenants = () => {
           </button>
         </div>
 
-        <Link
-          to={"/addtenant"}
-          className="flex items-center justify-center gap-1 text-sm font-semibold border rounded-md bg-gray-300 hover:bg-violet-500 hover:text-white duration-75 ease-in-out cursor-pointer p-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          <p className="whitespace-nowrap">Add Tenant</p>
+        <Link to={"/addtenant"} className="flex-shrink-0 h-10">
+          <div className="flex items-center justify-center gap-1 text-xs sm:text-sm font-semibold border rounded-md bg-gray-300 hover:bg-violet-500 hover:text-white duration-75 ease-in-out cursor-pointer px-2 h-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            <p className="whitespace-nowrap">Add Tenant</p>
+          </div>
         </Link>
       </div>
 

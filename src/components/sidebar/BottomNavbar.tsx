@@ -72,7 +72,7 @@ export const YouTubeBottomNav: React.FC = () => {
 
   return (
     <>
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-50 border-t border-youtube-border flex justify-around items-center py-2 px-1 z-40">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-50 border-t border-youtube-border flex justify-around items-center py-2 px-1 z-40 w-screen">
         <BottomNavItem icon={Home} text="Home" to={ROUTES.HOME} />
         <BottomNavItem icon={User} text="Tenant" to={ROUTES.TENANT} />
         <BottomNavItem

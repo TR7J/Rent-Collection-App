@@ -376,18 +376,35 @@ const Rentals = () => {
   };
 
   return (
-    <div className="px-6 py-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl md:text-2xl font-bold mr-3">
-          Rentals({filteredRentals.length})
-        </h1>
-        <div className="p-2 flex gap-1 border border-gray-300 rounded-sm">
+    <div className="px-6 py-4 w-screen sm:w-full min-h-screen">
+      <div className="flex justify-between items-center flex-wrap gap-2 sm:gap-0 p-1 sm:p-0">
+        <div className="flex justify-center items-center gap-1 sm:gap-2">
+          <h1 className="text-xl md:text-2xl font-bold">
+            Rentals({filteredRentals.length})
+          </h1>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <ExpandCircleDownIcon className="text-violet-500" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>View</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate("/payments")}>
+                Payments
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/utilities")}>
+                Utilities
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="p-1 sm:p-2 flex gap-1 border border-gray-300 rounded-sm">
           <span
             className={`${
               activePart === "Current"
                 ? "bg-violet-500  text-white"
                 : "bg-transparent"
-            } p-1  rounded-sm cursor-pointer text-gray-500`}
+            } p-1  rounded-sm cursor-pointer text-gray-500 text-xs sm:text-sm flex items-center justify-center min-w-[40px] sm:min-w-[50px] text-center`}
             onClick={() => setActivePart("Current")}
           >
             Rented
@@ -397,7 +414,7 @@ const Rentals = () => {
               activePart === "Past"
                 ? "bg-violet-500 text-white"
                 : "bg-transparent"
-            } p-1 rounded-sm cursor-pointer text-gray-500`}
+            } p-1 rounded-sm cursor-pointer text-gray-500 text-xs sm:text-sm flex items-center justify-center min-w-[40px] sm:min-w-[50px] text-center`}
             onClick={() => setActivePart("Past")}
           >
             Past
@@ -405,33 +422,33 @@ const Rentals = () => {
         </div>
       </div>
 
-      <div>
+      <div className="mt-2">
         <h1 className="text-center text-2xl font-bold">Rentals Center</h1>
-        <div className="flex justify-center">
-          <p className="text-center text-base md:text-base">
+        <div className="flex md:justify-center mt-1">
+          <p className="text-left md:text-center text-base md:text-xl">
             View and manage both active and past rentals. Track rental details,
             payment status to stay on top of your rental properties.
           </p>
         </div>
       </div>
 
-      <div className="flex items-center justify-center my-6 gap-3">
-        <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center my-6 gap-2 sm:gap-3 overflow-x-auto px-1 w-full">
+        <div className="flex items-center justify-center flex-shrink h-9">
           <input
             type="search"
             name="search"
             id="search"
-            placeholder="Search for your Rental"
-            className="p-2 rounded-l-md min-w-52 md:min-w-96"
+            placeholder="Search Rental"
+            className="p-2 rounded-l-md w-[150px] xs:w-[180px] sm:min-w-52 md:min-w-96 text-sm sm:text-base h-full"
           />
-          <button className="p-2 bg-violet-500 rounded-r-md">
+          <button className="p-2 bg-violet-500 rounded-r-md flex-shrink-0 h-full flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              className="size-6 text-white"
+              className="size-5 md:size-6 text-white"
             >
               <path
                 stroke-linecap="round"
@@ -442,41 +459,25 @@ const Rentals = () => {
           </button>
         </div>
 
-        <Link
-          to={"/addrental"}
-          className="flex items-center justify-center gap-1 text-sm font-semibold border rounded-md bg-gray-300 hover:bg-violet-500 hover:text-white duration-75 ease-in-out cursor-pointer p-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          <p className="whitespace-nowrap">Add Rental</p>
+        <Link to={"/addrental"} className="flex-shrink-0 h-10">
+          <div className="flex items-center justify-center gap-1 text-xs sm:text-sm font-semibold border rounded-md bg-gray-300 hover:bg-violet-500 hover:text-white duration-75 ease-in-out cursor-pointer px-2 h-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="size-5 sm:size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            <p className="whitespace-nowrap">Add Rental</p>
+          </div>
         </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <ExpandCircleDownIcon className="text-violet-500" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>View</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate("/payments")}>
-              Payments
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate("/utilities")}>
-              Utilities
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
 
       {loading && <Loading />}
@@ -505,12 +506,12 @@ const Rentals = () => {
           return (
             <div
               key={rental._id}
-              className="text-xxs md:text-sm uppercase bg-white border border-gray-300 rounded-sm p-2 whitespace-nowrap"
+              className="text-xxs md:text-sm uppercase bg-white border border-gray-300 rounded-sm p-2 md:p-3 overflow-hidden"
             >
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center flex-wrap gap-1">
                 {rentStatus && (
                   <span
-                    className={`text-center p-1 text-xs font-bold px-2 py-1 rounded ${
+                    className={`text-center  text-xs font-bold px-2 py-1 rounded ${
                       rentStatus === "RENT OVERDUE"
                         ? "bg-red-500 text-white"
                         : rentStatus === "RENT PENDING"
@@ -544,18 +545,18 @@ const Rentals = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              <div className="flex justify-between pb-1 mt-1">
-                <span className=" font-bold  text-violet-500">
+              <div className="flex justify-between pb-1 mt-1 flex-wrap gap-1">
+                <span className=" font-bold  text-violet-500 text-xs md:text-sm">
                   {rental.property.name}
                 </span>
-                <span className=" font-bold">
+                <span className=" font-bold text-xs md:text-sm">
                   UTILITIES: KES {rental.utilitiesTotal}
                 </span>
               </div>
 
-              <div className="flex justify-between pb-1">
-                <div className="flex">
-                  <span className=" font-bold">
+              <div className="flex justify-between pb-1 mt-1 flex-wrap gap-1">
+                <div className="flex items-center">
+                  <span className=" font-bold text-xs md:text-sm">
                     {rental.renter.firstName} {rental.renter.lastName}
                   </span>
                   <svg
@@ -564,7 +565,7 @@ const Rentals = () => {
                     viewBox="0 0 24 24"
                     stroke-width="1.5"
                     stroke="currentColor"
-                    className="size-5 ml-2"
+                    className="size-4 md:size-5 ml-1 md:ml-2"
                     onClick={() => {
                       openReminderModal();
                       handleSelectRental(rental._id);
@@ -624,7 +625,7 @@ const Rentals = () => {
                     </div>
                   </div>
                 )}
-                <span className=" font-bold">
+                <span className=" font-bold text-xs md:text-sm">
                   Paid:{" "}
                   <span className="text-green-600 font-extrabold">
                     KES {rental.paidAmount + rental.utilityPaidAmount}
@@ -632,12 +633,12 @@ const Rentals = () => {
                 </span>
               </div>
 
-              <div className="flex justify-between pb-1 ">
-                <span className=" font-bold">
+              <div className="flex justify-between pb-1 mt-1 flex-wrap gap-1">
+                <span className=" font-bold text-xs md:text-sm">
                   Monthly:{" "}
                   <span className="font-extrabold">KES {rental.amount}</span>
                 </span>
-                <span className=" font-bold">
+                <span className=" font-bold text-xs md:text-sm">
                   Due:{" "}
                   <span className="text-red-600 font-extrabold">
                     KES {rental.dues}
@@ -645,15 +646,15 @@ const Rentals = () => {
                 </span>
               </div>
 
-              <div className="flex justify-between pb-1 ">
-                <span className=" font-bold">
+              <div className="flex justify-between pb-1 mt-1 flex-wrap gap-1">
+                <span className=" font-bold text-xs md:text-sm">
                   DATES:{" "}
                   <span className="text-violet-500 mr-2">
                     {format(new Date(rental.rentalStartDate), "dd-MM-yyyy")} -{" "}
                     {format(new Date(rental.rentalEndDate), "dd-MM-yyyy")}
                   </span>
                 </span>
-                <span className=" font-bold ">
+                <span className=" font-bold text-xs md:text-sm">
                   Deadline:{" "}
                   <span className="text-red-600 font-extrabold">
                     {format(new Date(rental.deadline), "dd-MM-yyyy")}
@@ -661,14 +662,14 @@ const Rentals = () => {
                 </span>
               </div>
 
-              <div className="flex justify-between mt-2">
+              <div className="flex justify-between mt-2 flex-wrap gap-2">
                 <Link to={`/addpayment/${rental._id}`}>
-                  <button className="bg-violet-500 text-white font-bold px-2 py-1 rounded-sm ">
+                  <button className="bg-violet-500 text-white font-bold px-2 py-1 rounded-sm text-xs md:text-sm">
                     Add Payment
                   </button>
                 </Link>
                 <Link to={`/addUtility/${rental._id}`}>
-                  <button className="bg-violet-500 text-white font-bold px-2 py-1 rounded-sm">
+                  <button className="bg-violet-500 text-white font-bold px-2 py-1 rounded-sm text-xs md:text-sm">
                     Pay Utility
                   </button>
                 </Link>

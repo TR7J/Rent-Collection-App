@@ -152,34 +152,34 @@ export default function ExpenseList() {
   };
 
   return (
-    <div className="px-6 py-4">
+    <div className="px-6 py-4 w-screen sm:w-full min-h-screen">
       <div>
         <h1 className="text-center text-2xl font-bold">Expenses Center</h1>
-        <div className="flex justify-center">
-          <p className="text-center text-base md:text-xl">
+        <div className="flex md:justify-center mt-1">
+          <p className="text-left md:text-center text-base md:text-xl">
             Track and manage all property-related expenses in one place. Easily
             record maintenance costs, utilities, and other expenditures to stay
             organized and maintain a clear financial overview.
           </p>
         </div>
       </div>
-      <div className="flex items-center justify-center my-6 gap-3">
-        <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center my-6 gap-2 sm:gap-3 overflow-x-auto px-1 w-full">
+        <div className="flex items-center justify-center flex-shrink h-9">
           <input
             type="search"
             name="search"
             id="search"
-            placeholder="Search for an Expense"
-            className="p-2 rounded-l-md min-w-52 md:min-w-96"
+            placeholder="Search Expense"
+            className="p-2 rounded-l-md w-[150px] xs:w-[180px] sm:min-w-52 md:min-w-96 text-sm sm:text-base h-full"
           />
-          <button className="p-2 bg-violet-500 rounded-r-md">
+          <button className="p-2 bg-violet-500 rounded-r-md flex-shrink-0 h-full flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              className="size-6 text-white"
+              className="size-5 sm:size-6 text-white"
             >
               <path
                 stroke-linecap="round"
@@ -190,25 +190,24 @@ export default function ExpenseList() {
           </button>
         </div>
 
-        <Link
-          to={"/addexpense"}
-          className="flex items-center justify-center gap-1 text-sm font-semibold border rounded-md bg-gray-300 hover:bg-violet-500 hover:text-white duration-75 ease-in-out cursor-pointer p-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          <p className="whitespace-nowrap">Add Expense</p>
+        <Link to={"/addexpense"} className="flex-shrink-0 h-10">
+          <div className="flex items-center justify-center gap-1 text-xs sm:text-sm font-semibold border rounded-md bg-gray-300 hover:bg-violet-500 hover:text-white duration-75 ease-in-out cursor-pointer px-2 h-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="size-5 sm:size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            <p className="whitespace-nowrap">Add Expense</p>
+          </div>
         </Link>
       </div>
       <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl 2xl:max-w-3xl mx-auto space-y-4">
@@ -241,7 +240,7 @@ export default function ExpenseList() {
                 </div>
                 <div>
                   <div className="text-sm text-gray-500">BALANCE</div>
-                  <div className="text-lg font-semibold">
+                  <div className="text-base sm:text-lg font-semibold">
                     {balance.toLocaleString("en-US", {
                       style: "currency",
                       currency: "KES",
@@ -257,7 +256,7 @@ export default function ExpenseList() {
                 </div>
                 <div>
                   <div className="text-sm text-gray-500">EXPENSES</div>
-                  <div className="text-lg font-semibold">
+                  <div className="text-base sm:text-lg font-semibold">
                     {totalExpenses.toLocaleString("en-US", {
                       style: "currency",
                       currency: "KES",
@@ -347,7 +346,7 @@ export default function ExpenseList() {
                       </span>
                     </div>
                     <div className="ml-4 sm:ml-6 flex-grow">
-                      <span className="text-gray-900 text-base block">
+                      <span className="text-gray-900 text-sm block font-bold">
                         {expense.type}
                       </span>
                       <span className="text-gray-500 text-xs">
@@ -355,7 +354,7 @@ export default function ExpenseList() {
                       </span>
                     </div>
                     <div className="flex items-center gap-3 sm:gap-4">
-                      <span className="text-gray-700 text-base sm:text-base">
+                      <span className="text-gray-700 text-xs sm:text-sm italic whitespace-nowrap">
                         {(-expense.amount).toLocaleString("en-US", {
                           style: "currency",
                           currency: "KES",

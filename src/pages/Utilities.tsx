@@ -49,19 +49,17 @@ const Utilities = () => {
     }
   };
   return (
-    <div className="px-6 py-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl md:text-2xl font-bold mr-3">
-          Utilities History
-        </h1>
-        <div className="flex items-center justify-center gap-1 text-sm font-semibold border rounded-md bg-gray-300 hover:bg-violet-500 hover:text-white duration-75 ease-in-out cursor-pointer p-2">
+    <div className="px-6 py-4 w-screen sm:w-full min-h-screen">
+      <div className="flex justify-between items-center flex-wrap gap-2 sm:gap-0 p-1 sm:p-0">
+        <h1 className="text-xl md:text-2xl font-bold">Utilities History</h1>
+        <div className="flex items-center justify-center gap-1 text-xs sm:text-sm font-semibold border rounded-md bg-gray-300 hover:bg-violet-500 hover:text-white duration-75 ease-in-out cursor-pointer px-2 h-10">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            className="size-6"
+            className="size-5 sm:size-6"
           >
             <path
               stroke-linecap="round"
@@ -74,10 +72,10 @@ const Utilities = () => {
         </div>
       </div>
 
-      <div>
+      <div className="mt-1">
         <h1 className="text-center text-2xl font-bold">Utilities Center</h1>
-        <div className="flex justify-center">
-          <p className="text-center text-base md:text-base">
+        <div className="flex md:justify-center mt-1">
+          <p className="text-left md:text-center text-base md:text-base">
             The Utilities Center helps you track and manage utility expenses for
             rentals. You can view, add, edit, or delete utility records and
             search by property. It also allows exporting data for better
@@ -86,23 +84,23 @@ const Utilities = () => {
         </div>
       </div>
 
-      <div className="flex items-center justify-center my-6 gap-3">
-        <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center my-6 gap-2 sm:gap-3 overflow-x-auto px-1 w-full">
+        <div className="flex items-center justify-center flex-shrink h-9">
           <input
             type="search"
             name="search"
             id="search"
-            placeholder="Search for your Payments"
-            className="p-2 rounded-l-md min-w-52 md:min-w-96"
+            placeholder="Search Utilities"
+            className="p-2 rounded-l-md w-[150px] xs:w-[180px] sm:min-w-52 md:min-w-96 text-sm sm:text-base h-full"
           />
-          <button className="p-2 bg-violet-500 rounded-r-md">
+          <button className="p-2 bg-violet-500 rounded-r-md flex-shrink-0 h-full flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              className="size-6 text-white"
+              className="size-5 sm:size-6 text-white"
             >
               <path
                 stroke-linecap="round"
@@ -113,25 +111,24 @@ const Utilities = () => {
           </button>
         </div>
 
-        <Link
-          to={"/addutility"}
-          className="flex items-center justify-center gap-1 text-sm font-semibold border rounded-md bg-gray-300 hover:bg-violet-500 hover:text-white duration-75 ease-in-out cursor-pointer p-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          <p className="whitespace-nowrap">Add Utility</p>
+        <Link to={"/addutility"} className="flex-shrink-0 h-10">
+          <div className="flex items-center justify-center gap-1 text-xs sm:text-sm font-semibold border rounded-md bg-gray-300 hover:bg-violet-500 hover:text-white duration-75 ease-in-out cursor-pointer px-2 h-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="size-5 sm:size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            <p className="whitespace-nowrap">Add Utility</p>
+          </div>
         </Link>
       </div>
       {loading ? (
